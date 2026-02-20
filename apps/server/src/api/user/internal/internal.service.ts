@@ -26,6 +26,7 @@ export class UserInternalService {
         firstName: true,
         lastName: true,
         phoneNumber: true,
+        role: true,
       },
     })
     return users

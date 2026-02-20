@@ -20,5 +20,6 @@ export class UserPublicController {
   async login(@Body() args: LoginArgs) {
     const res = await this.service.login(args)
 
+    return { statusCode: HttpStatus.OK, data: res }
   }
 }
