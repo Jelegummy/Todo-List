@@ -73,3 +73,18 @@ export const deleteTask = async (id: string) => {
 
     return res.data
 }
+
+export const updateTaskStatus = async (status: string, id: string) => {
+    const session = await getSession()
+
+    const res = await fetchers.Patch(`${ENDPOINT}/task/internal/update-status/${id}`, {
+        data: { status },
+        token: session?.user.accessToken,
+    })
+
+    if (res.statusCode >= HttpStatus.BAD_REQUEST) {
+        throw new Error(res.message)
+    }
+
+    return res.data
+}

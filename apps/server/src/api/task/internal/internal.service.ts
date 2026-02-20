@@ -1,6 +1,6 @@
 import { PrismaService } from "@app/db";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { TaskArgs } from "./internal.dto";
+import { TaskArgs, TaskStatus } from "./internal.dto";
 import { Context, getUserFromContext } from "@app/common";
 
 @Injectable()
@@ -130,5 +130,34 @@ export class TaskInternalService {
             },
         })
 
+    }
+
+    async updateTaskStatus(status: TaskStatus, ctx: Context, id: string) {
+        const user = getUserFromContext(ctx)
+        if (!user) {
+            throw new Error('User not found')
+        }
+
+        const task = await this.db.task.findUnique({
+            where: {
+                id,
+                ownerId: user.id,
+            },
+        })
+
+        if (!task) {
+            throw new NotFoundException('Task not found')
+        }
+
+        const updatedTask = await this.db.task.update({
+            where: {
+                id,
+            },
+            data: {
+                status: status,
+            },
+        })
+
+        return updatedTask
     }
 }

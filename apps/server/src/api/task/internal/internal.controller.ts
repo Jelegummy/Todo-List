@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Req } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { TaskInternalService } from "./internal.service";
-import { TaskArgs } from "./internal.dto";
+import { TaskArgs, TaskStatus } from "./internal.dto";
 import { Context } from "@app/common";
 
 @ApiTags('Task - Internal')
@@ -40,6 +40,13 @@ export class TaskInternalController {
     @Delete('/delete/:id')
     async deleteTask(@Req() ctx: Context, @Param('id') id: string) {
         const res = await this.service.deleteTask(id, ctx)
+
+        return { statusCode: HttpStatus.OK, data: res }
+    }
+
+    @Patch('/update-status/:id')
+    async updateTaskStatus(@Body('status') status: TaskStatus, @Req() ctx: Context, @Param('id') id: string) {
+        const res = await this.service.updateTaskStatus(status, ctx, id)
 
         return { statusCode: HttpStatus.OK, data: res }
     }
