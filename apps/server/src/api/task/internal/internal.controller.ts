@@ -53,7 +53,7 @@ export class TaskInternalController {
 
     @Post('/tasks/tag-user')
     async tagUserToTask(@Body() args: TagUserToTaskArgs, @Req() ctx: Context) {
-        const res = await this.service.tagUserToTask(args.userId, args.taskId, ctx);
+        const res = await this.service.tagUserToTask(args.email, args.taskId, ctx);
 
         return { statusCode: HttpStatus.OK, data: res };
     }

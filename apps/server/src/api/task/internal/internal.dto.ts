@@ -20,7 +20,7 @@ export enum TaskStatus {
 
 export class TagUserToTaskArgs extends createZodDto(
     z.object({
-        userId: z.string(),
+        email: z.string().email('รูปแบบอีเมลไม่ถูกต้อง'),
         taskId: z.string(),
     }),
 ) { }

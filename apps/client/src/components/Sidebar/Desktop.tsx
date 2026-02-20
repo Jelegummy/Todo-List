@@ -34,7 +34,7 @@ const SidebarDesktop = ({ isOpen, onToggle }: SidebarProps) => {
         />
       </button>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex h-screen flex-col gap-4">
         <div
           className={`flex items-center transition-all ${
             isOpen ? 'justify-start gap-2' : 'justify-center'
@@ -72,12 +72,13 @@ const SidebarDesktop = ({ isOpen, onToggle }: SidebarProps) => {
               />
             ))}
         </div>
+
         <button
           onClick={() => {
             signOut({ redirect: false })
             router.push('/')
           }}
-          className="btn w-full bg-[#1F57CF] text-white hover:bg-[#194bb5]"
+          className="btn mt-auto w-full bg-[#1F57CF] text-white hover:bg-[#194bb5]"
         >
           ออกจากระบบ
         </button>

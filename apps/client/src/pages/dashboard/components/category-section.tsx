@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { CalendarClock, Folder, Pencil, Plus, Trash2 } from 'lucide-react'
+import { IoMdPricetags } from 'react-icons/io'
 
 export default function CategorySection({
   title,
@@ -11,9 +12,10 @@ export default function CategorySection({
   onDelete,
   onCreate,
   onDeleteCategory,
+  onTag,
 }: any) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [isDeleteTaskDialogOpen, setIsDeleteTaskDialogOpen] = useState(false)
+  const [taskToDelete, setTaskToDelete] = useState<any>(null)
 
   return (
     <>
@@ -64,7 +66,7 @@ export default function CategorySection({
                   <div className="flex items-center gap-1.5 text-xs text-gray-500">
                     <CalendarClock className="h-3.5 w-3.5" />
                     <span>
-                      กำหนดส่ง:{' '}
+                      กำหนดงาน:{' '}
                       {new Date(task.dueDate).toLocaleDateString('th-TH')}
                     </span>
                   </div>
@@ -100,6 +102,12 @@ export default function CategorySection({
                 </div>
 
                 <button
+                  onClick={() => onTag(task)}
+                  className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-blue-100 hover:text-blue-700"
+                >
+                  <IoMdPricetags className="h-5 w-5" />
+                </button>
+                <button
                   onClick={() => onEdit(task)}
                   className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-blue-100 hover:text-blue-700"
                 >
@@ -107,9 +115,7 @@ export default function CategorySection({
                 </button>
 
                 <button
-                  onClick={() => {
-                    setIsDeleteTaskDialogOpen(true)
-                  }}
+                  onClick={() => setTaskToDelete(task)}
                   className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-100 hover:text-red-700"
                 >
                   <Trash2 className="h-5 w-5" />
@@ -157,7 +163,7 @@ export default function CategorySection({
         </dialog>
       )}
 
-      {isDeleteTaskDialogOpen && (
+      {taskToDelete && (
         <dialog className="modal modal-open">
           <div className="modal-box">
             <h3 className="mb-2 text-lg font-bold text-gray-900">
@@ -168,15 +174,15 @@ export default function CategorySection({
             <div className="modal-action">
               <button
                 className="btn btn-ghost"
-                onClick={() => setIsDeleteTaskDialogOpen(false)}
+                onClick={() => setTaskToDelete(null)}
               >
                 ยกเลิก
               </button>
               <button
                 className="btn border-none bg-red-600 text-white hover:bg-red-700"
                 onClick={() => {
-                  onDelete(tasks.id)
-                  setIsDeleteTaskDialogOpen(false)
+                  onDelete(taskToDelete.id)
+                  setTaskToDelete(null)
                 }}
               >
                 ยืนยันการลบ
@@ -185,9 +191,7 @@ export default function CategorySection({
           </div>
 
           <form method="dialog" className="modal-backdrop">
-            <button onClick={() => setIsDeleteTaskDialogOpen(false)}>
-              close
-            </button>
+            <button onClick={() => setTaskToDelete(null)}>close</button>
           </form>
         </dialog>
       )}

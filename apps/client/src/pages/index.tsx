@@ -24,8 +24,7 @@ export default function Home() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg font-medium text-white/80 sm:text-xl">
-            บันทึกงาน, จัดหมวดหมู่, ตั้งเวลาครบกำหนด และติดตามความคืบหน้าผ่าน
-            Dashboard
+            บันทึกงาน, จัดหมวดหมู่, ตั้งเวลาครบกำหนด
           </p>
 
           <div className="mt-10 flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">

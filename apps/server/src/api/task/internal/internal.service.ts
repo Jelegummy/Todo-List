@@ -1,5 +1,5 @@
 import { PrismaService } from "@app/db";
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { TaskArgs, TaskStatus } from "./internal.dto";
 import { Context, getUserFromContext } from "@app/common";
 
@@ -161,7 +161,7 @@ export class TaskInternalService {
         return updatedTask
     }
 
-    async tagUserToTask(userId: string, taskId: string, ctx: Context) {
+    async tagUserToTask(email: string, taskId: string, ctx: Context) {
         const user = getUserFromContext(ctx);
         if (!user) {
             throw new Error('Unauthorized');
@@ -175,17 +175,21 @@ export class TaskInternalService {
         }
 
         const userToTag = await this.db.user.findUnique({
-            where: { id: userId },
+            where: { email: email },
         });
         if (!userToTag) {
             throw new NotFoundException('User not found');
+        }
+
+        if (userToTag.id === user.id) {
+            throw new BadRequestException('ไม่สามารถมอบหมายงานให้ตัวเองได้');
         }
 
         await this.db.task.update({
             where: { id: taskId },
             data: {
                 taggedUsers: {
-                    connect: { id: userId },
+                    connect: { id: userToTag.id },
                 },
             },
         });

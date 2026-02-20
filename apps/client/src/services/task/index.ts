@@ -1,5 +1,5 @@
 import { ENDPOINT, fetchers, HttpStatus } from "@/utils";
-import { CreateTask, Task } from "./types";
+import { CreateTask, TagUserToTaskArgs, Task } from "./types";
 import { getSession } from "next-auth/react";
 
 export const createTask = async (args: CreateTask) => {
@@ -79,6 +79,35 @@ export const updateTaskStatus = async (status: string, id: string) => {
 
     const res = await fetchers.Patch(`${ENDPOINT}/task/internal/update-status/${id}`, {
         data: { status },
+        token: session?.user.accessToken,
+    })
+
+    if (res.statusCode >= HttpStatus.BAD_REQUEST) {
+        throw new Error(res.message)
+    }
+
+    return res.data
+}
+
+export const tagUserToTask = async (args: TagUserToTaskArgs) => {
+    const session = await getSession()
+
+    const res = await fetchers.Post(`${ENDPOINT}/task/internal/tasks/tag-user`, {
+        data: args,
+        token: session?.user.accessToken,
+    })
+
+    if (res.statusCode >= HttpStatus.BAD_REQUEST) {
+        throw new Error(res.message)
+    }
+
+    return res.data
+}
+
+export const getTaggedTasks = async () => {
+    const session = await getSession()
+
+    const res = await fetchers.Get<Task[]>(`${ENDPOINT}/task/internal/tasks/tagged`, {
         token: session?.user.accessToken,
     })
 

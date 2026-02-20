@@ -8,6 +8,8 @@ import {
   deleteTask,
   updateTask,
   createTask,
+  getTaggedTasks,
+  tagUserToTask,
 } from '@/services/task'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -19,13 +21,17 @@ import {
   Timer,
   CheckCircle2,
   Folder,
+  Users,
 } from 'lucide-react'
 import StatCard from '@/components/StatCard'
 import CategorySection from '@/pages/dashboard/components/category-section'
 import CreateButtonCategory from './components/create-button-category'
+import { TagUserToTaskArgs } from '@/services/task/types'
 
 export default function Dashboard() {
   const [search, setSearch] = useState('')
+  const [taggingTask, setTaggingTask] = useState<any>(null)
+  const [useremailToTag, setUseremailToTag] = useState('')
   const queryClient = useQueryClient()
 
   const [editingTask, setEditingTask] = useState<any>(null)
@@ -97,6 +103,36 @@ export default function Dashboard() {
     onError: () => toast.error('ลบหมวดหมู่ไม่สำเร็จ'),
   })
 
+  const { data: taggedTasks, isLoading: isTaggedTasksLoading } = useQuery({
+    queryKey: ['taggedTasks'],
+    queryFn: () => getTaggedTasks(),
+    refetchInterval: 2000,
+  })
+
+  const tagTaskMutation = useMutation({
+    mutationFn: (args: TagUserToTaskArgs) => tagUserToTask(args),
+    onSuccess: () => {
+      toast.success('แท็กผู้ใช้กับงานสำเร็จ')
+      setTaggingTask(null)
+      setUseremailToTag('')
+      queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['taggedTasks'] })
+    },
+    onError: () => toast.error('แท็กผู้ใช้กับงานไม่สำเร็จ'),
+  })
+
+  const handleTagSubmit = () => {
+    if (!useremailToTag.trim()) {
+      toast.error('กรุณาระบุอีเมลผู้ใช้ที่ต้องการมอบหมาย')
+      return
+    }
+
+    tagTaskMutation.mutate({
+      taskId: taggingTask.id,
+      email: useremailToTag.trim(),
+    })
+  }
+
   const handleCreateTaskSubmit = () => {
     if (!newTaskForm.title.trim()) {
       toast.error('กรุณากรอกชื่องาน')
@@ -116,6 +152,11 @@ export default function Dashboard() {
       task.title.toLowerCase().includes(search.toLowerCase()),
     ) || []
 
+  const filteredTaggedTasks =
+    taggedTasks?.filter((task: any) =>
+      task.title.toLowerCase().includes(search.toLowerCase()),
+    ) || []
+
   const categoriesWithTasks =
     categories?.map((category: any) => ({
       ...category,
@@ -129,6 +170,7 @@ export default function Dashboard() {
 
   const totalTasks = filteredTasks?.length || 0
   const totalCategories = categories?.length || 0
+  const totalTaggedTasks = filteredTaggedTasks?.length || 0
 
   const todoCount =
     filteredTasks?.filter((task: any) => task.status === 'TODO').length || 0
@@ -162,11 +204,11 @@ export default function Dashboard() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
               <StatCard
-                title="งานทั้งหมด"
-                value={totalTasks}
-                icon={<ListTodo className="h-6 w-6 text-blue-600" />}
-                bgColor="bg-blue-50"
-                isLoading={isTasksLoading}
+                title="งานที่ได้รับมอบหมาย"
+                value={totalTaggedTasks}
+                icon={<Users className="h-6 w-6 text-indigo-600" />}
+                bgColor="bg-indigo-50"
+                isLoading={isTaggedTasksLoading}
               />
               <StatCard
                 title="หมวดหมู่"
@@ -207,6 +249,23 @@ export default function Dashboard() {
               <CreateButtonCategory />
             </div>
 
+            {filteredTaggedTasks.length > 0 && (
+              <CategorySection
+                title="งานที่ได้รับมอบหมาย (ถูกแท็ก)"
+                tasks={filteredTaggedTasks}
+                categoryId={null}
+                getStatusStyle={getStatusStyle}
+                onStatusChange={(id: string, status: string) =>
+                  updateStatusMutation.mutate({ id, status })
+                }
+                onEdit={(task: any) => setEditingTask(task)}
+                onDelete={(id: string) => deleteTaskMutation.mutate(id)}
+                onCreate={() => setCreatingTaskInCategoryId(null)}
+                onDeleteCategory={null}
+                onTag={(task: any) => setTaggingTask(task)}
+              />
+            )}
+
             {uncategorizedTasks.length > 0 && (
               <CategorySection
                 title="งานทั่วไป (ไม่มีหมวดหมู่)"
@@ -220,6 +279,7 @@ export default function Dashboard() {
                 onDelete={(id: string) => deleteTaskMutation.mutate(id)}
                 onCreate={() => setCreatingTaskInCategoryId(null)}
                 onDeleteCategory={null}
+                onTag={(task: any) => setTaggingTask(task)}
               />
             )}
 
@@ -240,6 +300,7 @@ export default function Dashboard() {
                 onDeleteCategory={(id: string) =>
                   deleteCategoryMutation.mutate(id)
                 }
+                onTag={(task: any) => setTaggingTask(task)}
               />
             ))}
 
@@ -414,6 +475,70 @@ export default function Dashboard() {
                 onClick={() => {
                   setCreatingTaskInCategoryId(undefined)
                   setNewTaskForm({ title: '', status: 'TODO', dueDate: '' })
+                }}
+              >
+                close
+              </button>
+            </form>
+          </dialog>
+        )}
+        {taggingTask && (
+          <dialog className="modal modal-open">
+            <div className="modal-box">
+              <h3 className="mb-4 text-lg font-bold">
+                มอบหมายงาน:{' '}
+                <span className="text-blue-600">{taggingTask.title}</span>
+              </h3>
+
+              <div className="mb-3 flex flex-col gap-4">
+                <div>
+                  <label className="label">
+                    <span className="label-text font-semibold">
+                      email ที่ต้องการมอบหมาย
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    className="input input-bordered w-full"
+                    placeholder="กรอก email ผู้ใช้..."
+                    value={useremailToTag}
+                    onChange={e => setUseremailToTag(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') handleTagSubmit()
+                    }}
+                    autoFocus
+                  />
+                  <span className="label-text-alt mt-2 text-gray-500">
+                    *ระบุ email ผู้ใช้ที่ต้องการแชร์งานนี้ให้
+                  </span>
+                </div>
+              </div>
+
+              <div className="modal-action">
+                <button
+                  className="btn btn-ghost"
+                  onClick={() => {
+                    setTaggingTask(null)
+                    setUseremailToTag('')
+                  }}
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  className="btn bg-[#2460E3] text-white hover:bg-blue-700"
+                  onClick={handleTagSubmit}
+                  disabled={tagTaskMutation.isPending}
+                >
+                  {tagTaskMutation.isPending ? 'กำลังแท็ก...' : 'ยืนยันการแท็ก'}
+                </button>
+              </div>
+            </div>
+
+            <form method="dialog" className="modal-backdrop">
+              <button
+                onClick={() => {
+                  setTaggingTask(null)
+                  setUseremailToTag('')
                 }}
               >
                 close
