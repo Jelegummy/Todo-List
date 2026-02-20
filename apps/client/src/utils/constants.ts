@@ -11,7 +11,7 @@ export const HttpStatus = {
 }
 
 export const ENDPOINT =
-  process.env.NEXT_PUBLIC_ENDPOINT || 'http://127.0.0.1:4000'
+  process.env.NEXT_PUBLIC_ENDPOINT || 'http://127.0.0.1:4001'
 
 export const FILE_ENDPOINT =
   process.env.NEXT_PUBLIC_FILE_ENDPOINT || 'http://127.0.0.1:3001'

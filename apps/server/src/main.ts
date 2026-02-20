@@ -38,9 +38,9 @@ const main = async () => {
   }
 
   await app.enableShutdownHooks()
-  await app.listen({ host: '0.0.0.0', port: 4000 }).then(() => {
-    console.log('Server  at http://127.0.0.1:4000/[paths]')
-    console.log('Swagger at http://127.0.0.1:4000/api')
+  await app.listen({ host: '0.0.0.0', port: 4001 }).then(() => {
+    console.log('Server  at http://127.0.0.1:4001/[paths]')
+    console.log('Swagger at http://127.0.0.1:4001/api')
   })
 }
 
