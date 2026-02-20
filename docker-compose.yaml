@@ -1,0 +1,16 @@
+volumes:
+  todolist_data:
+
+services:
+  db:
+    container_name: todolist-database
+    image: postgres:17-alpine
+    restart: on-failure
+    ports:
+      - 5436:5432
+    environment:
+      - POSTGRES_DB=todolist
+      - POSTGRES_USER=local
+      - POSTGRES_PASSWORD=local
+    volumes:
+      - todolist_data:/var/lib/postgresql/data
