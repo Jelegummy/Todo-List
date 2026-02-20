@@ -11,10 +11,12 @@ import { ZodValidationPipe } from 'nestjs-zod'
 
 import { UserModule } from './api/user/user.module'
 import { CategoryModule } from './api/category/category.module'
+import { TaskModule } from './api/task/task.module'
 
 @Module({
   imports: [
     CategoryModule,
+    TaskModule,
     UserModule,
     AuthModule,
     PrismaModule,
