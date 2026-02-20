@@ -232,7 +232,7 @@ export default function Dashboard() {
                 isLoading={isTasksLoading}
               />
               <StatCard
-                title="เสร็จสิ้นแล้ว"
+                title="เสร็จสิ้น"
                 value={doneCount}
                 icon={<CheckCircle2 className="h-6 w-6 text-emerald-600" />}
                 bgColor="bg-emerald-50"
