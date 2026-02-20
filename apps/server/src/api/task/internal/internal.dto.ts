@@ -18,4 +18,11 @@ export enum TaskStatus {
     DONE = 'DONE',
 }
 
+export class TagUserToTaskArgs extends createZodDto(
+    z.object({
+        userId: z.string(),
+        taskId: z.string(),
+    }),
+) { }
+
 patchNestJsSwagger()

@@ -17,17 +17,17 @@ const DashboardLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
           <MdMenuOpen className="h-6 w-6" />
         </button>
 
-        <Link href="/" className="flex items-center overflow-hidden">
+        <Link href="/" className="flex items-center gap-2 overflow-hidden">
           <Image
-            src="/learnify-logo.png"
-            alt="Leanify"
+            src="/duck.jpg"
+            alt="TODO LIST"
             width={36}
             height={36}
             className="rounded-full object-cover"
             priority
           />
           <span className="whitespace-nowrap text-xl font-extrabold text-black">
-            Leanify
+            TODO LIST
           </span>
         </Link>
       </div>

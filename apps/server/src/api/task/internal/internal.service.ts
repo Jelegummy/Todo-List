@@ -1,5 +1,5 @@
 import { PrismaService } from "@app/db";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { TaskArgs, TaskStatus } from "./internal.dto";
 import { Context, getUserFromContext } from "@app/common";
 
@@ -159,5 +159,69 @@ export class TaskInternalService {
         })
 
         return updatedTask
+    }
+
+    async tagUserToTask(userId: string, taskId: string, ctx: Context) {
+        const user = getUserFromContext(ctx);
+        if (!user) {
+            throw new Error('Unauthorized');
+        }
+
+        const task = await this.db.task.findUnique({
+            where: { id: taskId },
+        });
+        if (!task) {
+            throw new NotFoundException('Task not found');
+        }
+
+        const userToTag = await this.db.user.findUnique({
+            where: { id: userId },
+        });
+        if (!userToTag) {
+            throw new NotFoundException('User not found');
+        }
+
+        await this.db.task.update({
+            where: { id: taskId },
+            data: {
+                taggedUsers: {
+                    connect: { id: userId },
+                },
+            },
+        });
+
+        return { message: 'User tagged to task successfully' };
+    }
+
+    async getTaggedTasks(ctx: Context) {
+        const user = getUserFromContext(ctx);
+        if (!user) {
+            throw new UnauthorizedException('Unauthorized');
+        }
+
+        const tasks = await this.db.task.findMany({
+            where: {
+                taggedUsers: {
+                    some: {
+                        id: user.id,
+                    },
+                },
+            },
+            include: {
+                owner: {
+                    select: {
+                        id: true,
+                        firstName: true,
+                        lastName: true,
+                    }
+                },
+                category: true,
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+
+        return tasks;
     }
 }

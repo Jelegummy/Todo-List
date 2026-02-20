@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Req } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { TaskInternalService } from "./internal.service";
-import { TaskArgs, TaskStatus } from "./internal.dto";
+import { TagUserToTaskArgs, TaskArgs, TaskStatus } from "./internal.dto";
 import { Context } from "@app/common";
 
 @ApiTags('Task - Internal')
@@ -49,5 +49,19 @@ export class TaskInternalController {
         const res = await this.service.updateTaskStatus(status, ctx, id)
 
         return { statusCode: HttpStatus.OK, data: res }
+    }
+
+    @Post('/tasks/tag-user')
+    async tagUserToTask(@Body() args: TagUserToTaskArgs, @Req() ctx: Context) {
+        const res = await this.service.tagUserToTask(args.userId, args.taskId, ctx);
+
+        return { statusCode: HttpStatus.OK, data: res };
+    }
+
+    @Get('/tasks/tagged')
+    async getTaggedTasks(@Req() ctx: Context) {
+        const res = await this.service.getTaggedTasks(ctx);
+
+        return { statusCode: HttpStatus.OK, data: res };
     }
 }

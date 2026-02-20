@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { MdMenuOpen } from 'react-icons/md'
 
@@ -72,6 +72,15 @@ const SidebarDesktop = ({ isOpen, onToggle }: SidebarProps) => {
               />
             ))}
         </div>
+        <button
+          onClick={() => {
+            signOut({ redirect: false })
+            router.push('/')
+          }}
+          className="btn w-full bg-[#1F57CF] text-white hover:bg-[#194bb5]"
+        >
+          ออกจากระบบ
+        </button>
       </div>
     </aside>
   )
