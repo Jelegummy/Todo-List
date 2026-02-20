@@ -60,12 +60,7 @@ const Login = () => {
       <div className="grid w-full max-w-5xl grid-cols-1 overflow-hidden rounded-3xl bg-white shadow-xl md:grid-cols-2">
         <div className="flex flex-col justify-center px-8 py-12 md:px-12">
           <div className="flex flex-col items-center gap-4">
-            <Image
-              src="/learnify-logo.png"
-              alt="Learnify Logo"
-              width={56}
-              height={56}
-            />
+            <Image src="/duck.jpg" alt="Learnify Logo" width={56} height={56} />
             <h1 className="text-2xl font-bold text-black">
               ยินดีต้อนรับเข้าสู่ระบบ
             </h1>
@@ -126,7 +121,7 @@ const Login = () => {
         </div>
         <div className="relative hidden items-center justify-center md:flex">
           <Image
-            src="/loginImage.jpg"
+            src="/bg-login.jpg"
             alt="Login Illustration"
             width={800}
             height={800}
