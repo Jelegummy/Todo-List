@@ -81,13 +81,12 @@ export class CategoryInternalService {
             throw new Error('User not found')
         }
 
-        const category = await this.db.category.delete({
+        await this.db.category.delete({
             where: {
                 id,
                 userId: user.id,
             },
         })
 
-        return category
     }
 }
