@@ -4,8 +4,8 @@ const Document = () => {
   return (
     <Html lang="en">
       <Head>
-        <link rel="icon" href="/learnify-logo.png" />
-        <title>Learnify</title>
+        <link rel="icon" href="/duck.jpg" />
+        <title>Todo</title>
         <link rel="preconnect" href="https://www.clarity.ms" />
         <link rel="preconnect" href="https://static.hotjar.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />

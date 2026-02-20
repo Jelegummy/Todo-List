@@ -42,8 +42,8 @@ const SidebarDesktop = ({ isOpen, onToggle }: SidebarProps) => {
         >
           <Link href="/" className="flex items-center gap-2 overflow-hidden">
             <Image
-              src="/learnify-logo.png"
-              alt="Leanify"
+              src="/duck.jpg"
+              alt="TODO LIST"
               width={44}
               height={44}
               className="rounded-full object-cover"
@@ -51,7 +51,7 @@ const SidebarDesktop = ({ isOpen, onToggle }: SidebarProps) => {
             />
             {isOpen && (
               <span className="whitespace-nowrap text-2xl font-extrabold text-black">
-                Leanify
+                TODO LIST
               </span>
             )}
           </Link>

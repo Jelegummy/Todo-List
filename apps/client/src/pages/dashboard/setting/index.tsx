@@ -181,20 +181,6 @@ export default function Setting() {
                   </p>
                 )}
               </div>
-              <div>
-                <label className="mb-1 block text-sm text-gray-400">
-                  โรงเรียน
-                </label>
-                <p className="font-medium text-gray-800">school name</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm text-gray-400">
-                  บทบาท
-                </label>
-                <p className="font-medium text-gray-800">
-                  {user?.role || 'ครู'}
-                </p>
-              </div>
             </div>
 
             {isEditingProfile && (
