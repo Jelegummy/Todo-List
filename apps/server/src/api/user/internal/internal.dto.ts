@@ -7,13 +7,13 @@ export class UpdateUserArgs extends createZodDto(
     lastName: z.string().optional(),
     phoneNumber: z.string().optional(),
   }),
-) { }
+) {}
 
 export class UpdatePasswordArgs extends createZodDto(
   z.object({
     oldpassword: z.string().min(8),
     newPassword: z.string().min(8),
   }),
-) { }
+) {}
 
 patchNestJsSwagger()
