@@ -8,8 +8,6 @@
     "build": "dotenvx run -- turbo build",
     "build:package": "dotenvx run -- turbo build --filter=\"./packages/*\"",
     "start": "dotenvx run -- turbo start",
-    "test": "dotenvx run -- turbo test",
-    "coverage": "dotenvx run -- turbo coverage",
     "lint": "eslint .",
     "fmt": "prettier --write \"**/*.{ts,tsx,md,json}\"",
     "db:push": "dotenvx run -- pnpm --filter=@app/db push",
@@ -18,8 +16,7 @@
     "db:migrate:dev": "dotenvx run -- pnpm --filter=@app/db migrate:dev",
     "db:migrate:draft": "dotenvx run -- pnpm --filter=@app/db migrate:draft",
     "db:migrate:deploy": "dotenvx run -- pnpm --filter=@app/db migrate:deploy",
-    "db:migrate:reset": "dotenvx run -- pnpm --filter=@app/db migrate:reset",
-    "maps:execute": "dotenvx run -- pnpm --filter=@app/maps-service execute"
+    "db:migrate:reset": "dotenvx run -- pnpm --filter=@app/db migrate:reset"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "1.51.1",
