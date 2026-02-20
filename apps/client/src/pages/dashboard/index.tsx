@@ -24,8 +24,8 @@ import {
   Users,
 } from 'lucide-react'
 import StatCard from '@/components/StatCard'
-import CategorySection from '@/pages/dashboard/components/category-section'
-import CreateButtonCategory from './components/create-button-category'
+import CategorySection from '@/components/CategorySection/category-section'
+import CreateButtonCategory from '../../components/CategorySection/create-button-category'
 import { TagUserToTaskArgs } from '@/services/task/types'
 
 export default function Dashboard() {
