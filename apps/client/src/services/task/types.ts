@@ -1,7 +1,6 @@
 export type CreateTask = {
   id: string
   title: string
-  description?: string
   completed: boolean
   dueDate?: Date | null
   createdAt: Date
@@ -11,7 +10,6 @@ export type CreateTask = {
 export type Task = {
   id: string
   title: string
-  description?: string
   completed: boolean
   dueDate?: Date | null
   createdAt: Date

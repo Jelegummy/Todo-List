@@ -10,7 +10,7 @@ import { Context, getUserFromContext } from '@app/common'
 
 @Injectable()
 export class TaskInternalService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(private readonly db: PrismaService) { }
 
   async createTask(args: TaskArgs, ctx: Context) {
     const user = getUserFromContext(ctx)
@@ -33,7 +33,6 @@ export class TaskInternalService {
     const job = await this.db.task.create({
       data: {
         title: args.title,
-        description: args.description,
         dueDate: args.dueDate,
         ownerId: user.id,
         status: args.status,
@@ -69,7 +68,6 @@ export class TaskInternalService {
       },
       data: {
         title: args.title,
-        description: args.description,
         dueDate: args.dueDate,
         ownerId: user.id,
         status: args.status,
